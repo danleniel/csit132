@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Number System Converter</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .night-mode body {
+    background-color: #000;
+    color: #fff;
+  }
+  #container {
+    width: 90%;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  p {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: bold;
+  }
+  select, input[type="number"], input[type="text"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .button {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  .button:hover {
+    background-color: #0056b3;
+  }
+  #result {
+    margin-top: 20px;
+    text-align: left;
+  }
+  #aboutText {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .dropdown-content button {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: left;
+    border: none;
+    font-size: 16px;
+  }
+  .dropdown-content button:hover {
+    background-color: #f2f2f2;
+  }
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+  .toggle-mode {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .toggle-mode button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 5px;
+    transition: color 0.3s;
+  }
+  .toggle-mode button:hover {
+    color: #007bff;
+  }
+  .night-mode .toggle-mode button {
+    color: #fff;
+  }
+  .night-mode {
+    background-color: #000;
+    color: #fff;
+  }
+  .night-mode .button {
+    background-color: #333;
+    color: #fff;
+  }
+  .night-mode input[type="text"],
+  .night-mode select,
+  .night-mode input[type="number"] {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+<div id="container">
+  <h1>Number System Converter</h1>
+  <div class="dropdown">
+    <button class="button" onclick="toggleDropdown('from')">From</button>
+    <div class="dropdown-content" id="fromDropdown">
+      <button onclick="setFrom('decimal')">Decimal</button>
+      <button onclick="setFrom('binary')">Binary</button>
+      <button onclick="setFrom('octal')">Octal</button>
+      <button onclick="setFrom('hex')">Hexadecimal</button>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="button" onclick="toggleDropdown('to')">To</button>
+    <div class="dropdown-content" id="toDropdown">
+      <button onclick="setTo('decimal')">Decimal</button>
+      <button onclick="setTo('binary')">Binary</button>
+      <button onclick="setTo('octal')">Octal</button>
+      <button onclick="setTo('hex')">Hexadecimal</button>
+    </div>
+  </div>
+  <label for="number">Enter number:</label>
+  <input type="text" id="number" placeholder="Enter number" required>
+  <button class="button" onclick="convert()">Convert</button>
+  <div id="result"></div>
+  <div id="aboutText">Programmed by Daniel Russel O. Jordan</div>
+</div>
+<div class="toggle-mode">
+  <button onclick="toggleNightMode()">
+    <span id="moon" style="display: none;">🌙</span>
+    <span id="sun">☀️</span>
+  </button>
+</div>
+<script>
+  var fromType = 'decimal';
+  var toType = 'binary';
+
+  function setFrom(type) {
+    fromType = type;
+    document.querySelector('.dropdown .button').innerText = 'From (' + type.charAt(0).toUpperCase() + type.slice(1) + ')';
+    document.getElementById('fromDropdown').style.display = 'none';
+  }
+
+  function setTo(type) {
+    toType = type;
+    document.querySelectorAll('.dropdown')[1].querySelector('.button').innerText = 'To (' + type.charAt(0).toUpperCase() + type.slice(1) + ')';
+    document.getElementById('toDropdown').style.display = 'none';
+  }
+
+  function toggleDropdown(dropdown) {
+    var dropdownContent = document.getElementById(dropdown + 'Dropdown');
+    if (dropdownContent.style.display === 'block') {
+      dropdownContent.style.display = 'none';
+    } else {
+      dropdownContent.style.display = 'block';
+    }
+  }
+
+  function toggleNightMode() {
+    document.body.classList.toggle('night-mode');
+    var sun = document.getElementById('sun');
+    var moon = document.getElementById('moon');
+    if (document.body.classList.contains('night-mode')) {
+      sun.style.display = 'none';
+      moon.style.display = 'inline';
+    } else {
+      sun.style.display = 'inline';
+      moon.style.display = 'none';
+    }
+  }
+
+  function convert() {
+    var number = document.getElementById("number").value;
+
+    var fromValue;
+    switch (fromType) {
+      case "decimal":
+        fromValue = parseInt(number, 10);
+        break;
+      case "binary":
+        fromValue = parseInt(number, 2);
+        break;
+      case "octal":
+        fromValue = parseInt(number, 8);
+        break;
+      case "hex":
+        fromValue = parseInt(number, 16);
+        break;
+    }
+
+    var result;
+    switch (toType) {
+      case "decimal":
+        result = fromValue;
+        break;
+      case "binary":
+        result = fromValue.toString(2);
+        break;
+      case "octal":
+        result = fromValue.toString(8);
+        break;
+      case "hex":
+        result = fromValue.toString(16).toUpperCase();
+        break;
+    }
+
+    document.getElementById("result").innerHTML = `<p>Result: ${result}</p>`;
+  }
+</script>
+</body>
+</html>
